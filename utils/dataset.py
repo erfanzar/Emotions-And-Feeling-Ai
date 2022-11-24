@@ -80,6 +80,4 @@ class DataLoaderTorch:
         return DataLoader(DatasetTorch(self.x, self.y), batch_size=self.batch_size, num_workers=self.num_workers)
 
 
-if __name__ == "__main__":
-    dt = DataLoaderTorch(data_path='../data/train.txt')
-    # print(dt.y)
+
