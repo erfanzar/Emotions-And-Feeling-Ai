@@ -52,7 +52,7 @@ class LSTM(nn.Module):
         if len(x.shape) == 3 and self.auto_batch:
             x = x.permute(1, 0, 2)
         shape = (self.num_layers, x.shape[1], self.hidden_size)
-        h0, c0 = torch.zeros(shape), torch.zeros(shape)
+        h0, c0 = torch.zeros(shape).to(x.device), torch.zeros(shape).to(x.device)
         out, (final_hidden, final_cell) = self.lstm(x, (h0, c0))
 
         return final_cell[-1] if self.last_peace else out

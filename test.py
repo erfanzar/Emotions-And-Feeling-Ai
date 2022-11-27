@@ -1,7 +1,13 @@
-from utils.utils import read_yaml, pars_model
+import torch
 
-if __name__ == "__main__":
-    cfg = read_yaml('configs/cfg.yaml')
-    model_cfg = cfg['model']
+from utils.utils import accuracy
 
-    print(pars_model(model_cfg))
+if __name__ == '__main__':
+    x = torch.zeros((64, 3))
+    total, true = 0, 0
+    y = torch.zeros((64, 3))
+    y1 = torch.ones((64, 3))
+    acc, total, true = accuracy(x, y, total=total, true=true)
+    print(acc, total, true)
+    acc, total, true = accuracy(x, y1, total=total, true=true)
+    print(acc, total, true)

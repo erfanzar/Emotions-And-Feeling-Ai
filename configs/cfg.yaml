@@ -1,5 +1,1 @@
-model: [
-  [ -1,1,Linear,[ 10,15,'nn.SiLU()' ] ],
-  [ -1,10,Linear,[ 15,15,'nn.SiLU()' ] ],
-  [ -1,1,Linear,[ 15,5,'nn.SiLU()' ] ],
-]
+model: []
