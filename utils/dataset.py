@@ -2,10 +2,11 @@ import os
 
 import torch
 # import numba as nb
+import numpy as np
 from torch.utils.data import Dataset, DataLoader
 
 from .utils import read_txt, Cp, str_to_list
-
+import time
 
 class DatasetTorch(Dataset):
     def __init__(self, x: list, y: list, max_size: int, max: int):
@@ -17,18 +18,16 @@ class DatasetTorch(Dataset):
         return len(self.x)
 
     def __getitem__(self, item):
-        xs, ys = torch.zeros((1, self.max_size)), torch.zeros((1, self.max_size))
+        
         y = torch.tensor(self.y[item] if len(torch.tensor(self.y[item]).shape) != 0 else [self.y[item]])
-        x = torch.tensor(self.x[item])
-        xs[0][0:x.shape[0]] = x
-        ys[0][0:y.shape[0]] = y
+        x = torch.from_numpy(np.array(self.x[item],dtype=np.float32))
+        # print(x.dtype)
 
-        return [xs, ys]
-
+        return [x, y]
 
 class DataLoaderTorch:
     def __init__(self, data_path: [str, os.PathLike], batch_size: int = 6, num_workers: int = os.cpu_count() // 2,
-                 max_size: int = 100,
+                 max_size: int = 5900,
                  sep: str = ';'):
         super(DataLoaderTorch, self).__init__()
         self.y = None
@@ -49,32 +48,38 @@ class DataLoaderTorch:
         y_txt = [v[v.index(';') + 1:] for v in data]
         data = [d.replace(self.sep, '').lower() for d in data]
         va = 0
-
+        vs = 0
         for i, a in enumerate(data):
             va += 1
-            if a not in self.vocab_words:
-                aa = str_to_list(a)
-                for v in aa:
-                    self.vocab_words[v] = len(self.vocab_words)
+            aa = str_to_list(a)
+            for v in aa:
+                if v not in self.vocab_words:
+                    self.vocab_words[f"{v}"] = len(self.vocab_words) 
             print(f'\r{Cp.CYAN}Creating Word Vocab {(i / len(data)) * 100:.1f}', end='')
         print(f'\n{Cp.GREEN}Total Words : {len(self.vocab_words)}')
         for i in y_txt:
             if i not in self.class_names:
                 self.class_names[i] = len(self.class_names)
+        # ask = [[i,v] for i,v in self.vocab_words.items()]
 
+        # for i in range(400):
+            # for ak in ask:
+                # if ak[1] == i:
+                    # print(ak)
         print(f'{Cp.BLUE}Start Converting Data To Numerical Data {va} Texts are loaded')
         k = 0
-
+        # print(self.vocab_words)
         for d in x_txt:
-            f = []
+
             aa = str_to_list(d)
+            npa = np.zeros((1,self.max_size))
             for a in aa:
-                if a not in self.vocab_words:
-                    self.vocab_words[a] = len(self.vocab_words)
-                    k += 1
-                    print(f'\r{Cp.RED}UnRead Words : {k}', end='')
-                f.append(self.vocab_words[a])
-            x.append(f)
+                try:
+                    npa[0,self.vocab_words[a]] = 1
+                except:
+                    pass
+
+            x.append(npa)
         print()
         s = 0
         for a in y_txt:

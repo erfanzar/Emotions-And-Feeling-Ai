@@ -1,13 +1,11 @@
 import torch
 
 from utils.utils import accuracy
-
+from modules.module import Module
+from utils.dataset import DataLoaderTorch
+batch = 3
 if __name__ == '__main__':
-    x = torch.zeros((64, 3))
-    total, true = 0, 0
-    y = torch.zeros((64, 3))
-    y1 = torch.ones((64, 3))
-    acc, total, true = accuracy(x, y, total=total, true=true)
-    print(acc, total, true)
-    acc, total, true = accuracy(x, y1, total=total, true=true)
-    print(acc, total, true)
+    data_val = DataLoaderTorch(data_path='data/val.txt', batch_size=batch, num_workers=2).return_data_loader()
+
+    for x,y in data_val:
+        print(x.shape)

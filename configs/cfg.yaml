@@ -1,1 +1,14 @@
-model: []
+model: [
+  [-1,1,nn.Linear,[5900,4000]],
+  [-1,1,nn.LeakyReLU,[0.01]],
+  [-1,1,LSTM,[4000,2000,2]],
+  [-1,1,nn.LeakyReLU,[0.01]],
+  [-1,1,nn.Linear,[2000,1000]],
+  [-1,1,nn.LeakyReLU,[0.01]],
+  [-1,1,nn.Linear,[1000,500]],
+  [-1,1,nn.LeakyReLU,[0.01]],
+  [-1,1,nn.Linear,[500,100]],
+  [-1,1,nn.LeakyReLU,[0.01]],
+  [-1,1,nn.Linear,[100,6]],
+  [-1,1,nn.Sigmoid,[]]
+]

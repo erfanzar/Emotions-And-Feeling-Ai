@@ -34,10 +34,13 @@ def train(epochs: int = 300, batch: int = 64, device: str = 'cuda' if torch.cuda
             # x, y = data_ta.__next__()
             x, y = x.to(device), y.to(device)
             x = model(x)
-            x = x.reshape(x.shape[0], -1)
+        
             y_s = x.shape[-1]
+            
+            # print(y.shape)
             torch_y = torch.zeros((x.shape[0], y_s))
-            torch_y[:, 0:y_s] = y[:, 0, 0:y_s]
+            # print(torch_y.shape)
+            torch_y[:, 0:y_s] = y[:, 0:y_s]
             y = max_args_to_max_non_tom(torch_y, device)
             # output = x / x.amax(dim=(0, 1), keepdim=True)
             # print(f'output : {output}')
@@ -59,10 +62,10 @@ def train(epochs: int = 300, batch: int = 64, device: str = 'cuda' if torch.cuda
 
             x, y = x.to(device), y.to(device)
             x = model(x)
-            x = x.reshape(x.shape[0], -1)
+          
             y_s = x.shape[-1]
             torch_y = torch.zeros((x.shape[0], y_s))
-            torch_y[:, 0:y_s] = y[:, 0, 0:y_s]
+            torch_y[:, 0:y_s] = y[:, 0:y_s]
             y = max_args_to_max_non_tom(torch_y, device)
             x, y = x.float(), y.float()
             loss = loss_fn(input=x, target=y)
